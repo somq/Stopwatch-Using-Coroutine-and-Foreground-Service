@@ -20,6 +20,8 @@ import com.srmstudios.stopwatchtimer.util.formatMillisToTimer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -65,22 +67,32 @@ class StopwatchService: LifecycleService() {
     private fun startResumeStopWatch(){
         _isTracking.value = true
 
-        val scanner = Scanner {}
-        scanner
-            .advertisements
-            .onEach { Log.i("TAG", "Scan advertisement => $it") }
-            .launchIn(lifecycleScope)
+//        val scanner = Scanner {}
+//        scanner
+//            .advertisements
+//            .onEach { Log.i("xTEST", "Scan advertisement => $it") }
+//            .launchIn(lifecycleScope)
 
 
         lifecycleScope.launch(Dispatchers.IO) {
+//            val scanner = Scanner {}
+//            scanner
+//                .advertisements
+////                .onEach { Log.i("xTEST", "Scan advertisement => $it") }
+//                .filter { it.name?.startsWith("OCP") == true }
+//                .collect { advertisement ->
+//                    Log.i("xTEST", "Found ad $advertisement")
+//                }
+
             val startTimeMillis = System.currentTimeMillis()
             while (_isTracking.value!!){
                 _elapsedMilliSeconds.postValue((System.currentTimeMillis() - startTimeMillis) + elapsedMillisBeforePause)
                 val seconds = TimeUnit.MILLISECONDS.toSeconds(_elapsedMilliSeconds.value!!)
                 if(_elapsedSeconds.value != seconds){
                     _elapsedSeconds.postValue(seconds)
-                    Log.i("TAG", "Seconds elapsed => $seconds")
                 }
+                Log.i("xTEST", "Seconds elapsed => $seconds")
+
                 delay(1000)
             }
         }
@@ -148,6 +160,11 @@ class StopwatchService: LifecycleService() {
                     )
                 )
                 .build()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("xTEST", "onDestroy")
     }
 
     companion object {
