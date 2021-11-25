@@ -67,11 +67,11 @@ class StopwatchService: LifecycleService() {
     private fun startResumeStopWatch(){
         _isTracking.value = true
 
-//        val scanner = Scanner {}
-//        scanner
-//            .advertisements
-//            .onEach { Log.i("xTEST", "Scan advertisement => $it") }
-//            .launchIn(lifecycleScope)
+        val scanner = Scanner {}
+        scanner
+            .advertisements
+            .onEach { Log.i("xTEST", "Scan advertisement => $it") }
+            .launchIn(lifecycleScope)
 
 
         lifecycleScope.launch(Dispatchers.IO) {
