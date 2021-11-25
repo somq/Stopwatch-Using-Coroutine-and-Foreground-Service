@@ -7,17 +7,21 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import com.juul.kable.Scanner
 import com.srmstudios.stopwatchtimer.R
 import com.srmstudios.stopwatchtimer.ui.MainActivity
 import com.srmstudios.stopwatchtimer.util.formatMillisToTimer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -60,6 +64,14 @@ class StopwatchService: LifecycleService() {
 
     private fun startResumeStopWatch(){
         _isTracking.value = true
+
+        val scanner = Scanner {}
+        scanner
+            .advertisements
+            .onEach { Log.i("TAG", "Scan advertisement => $it") }
+            .launchIn(lifecycleScope)
+
+
         lifecycleScope.launch(Dispatchers.IO) {
             val startTimeMillis = System.currentTimeMillis()
             while (_isTracking.value!!){
@@ -67,8 +79,9 @@ class StopwatchService: LifecycleService() {
                 val seconds = TimeUnit.MILLISECONDS.toSeconds(_elapsedMilliSeconds.value!!)
                 if(_elapsedSeconds.value != seconds){
                     _elapsedSeconds.postValue(seconds)
+                    Log.i("TAG", "Seconds elapsed => $seconds")
                 }
-                delay(100)
+                delay(1000)
             }
         }
     }

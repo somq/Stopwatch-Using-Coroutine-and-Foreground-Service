@@ -10,7 +10,8 @@ android {
 
     defaultConfig {
         applicationId "com.srmstudios.stopwatchtimer"
-        minSdkVersion rootProject.min_sdk_version
+//        minSdkVersion rootProject.min_sdk_version
+        minSdkVersion 21
         targetSdkVersion rootProject.target_sdk_version
         versionCode 1
         versionName "1.0"
@@ -66,6 +67,8 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    implementation "com.juul.kable:core:0.10.2"
 }
 
 
